@@ -1,9 +1,46 @@
 <!DOCTYPE html>
 
 <html>
-  <head></head>
-
   <body>
-    <h1>TESTE</h1>
+    <div id="resultado"></div>
+
+    <img id="carrosel" width="800" height="800" />
+
+    <script>
+      var urls = [];
+
+      var xhr = new XMLHttpRequest();
+      xhr.open(
+        "GET",
+        "https://api.thecatapi.com/v1/images/search?limit=5",
+        true
+      );
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          var data = JSON.parse(xhr.responseText);
+          var container = document.getElementById("resultado");
+          container.innerHTML = ""; // limpa
+
+          for (var i = 0; i < data.length; i++) {
+            urls.push(data[i].url);
+          }
+
+          var index = 0;
+
+          const img = document.getElementById("carrosel");
+
+          setInterval(function () {
+            img.src = urls[index];
+
+            index++;
+
+            if (index > urls.length) {
+              index = 0;
+            }
+          }, 2000);
+        }
+      };
+      xhr.send();
+    </script>
   </body>
 </html>
